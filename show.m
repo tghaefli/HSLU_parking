@@ -11,7 +11,7 @@ FILTER  = false;
 % Download the csv-file from the httpurl and save it to the current
 % directory
 httpurl = 'http://hslu.xeg.ch/parking/raw/stats.csv';
-output='stats.csv';
+output  = 'stats.csv';
 urlwrite(httpurl,output,'Timeout',8);
 
 
