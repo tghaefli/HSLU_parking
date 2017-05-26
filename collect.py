@@ -22,8 +22,8 @@ s1, nbr      = soup.split('>', 1)
 # Log the data
 f = open(Filename, 'a')     # a = only append
 
-# year  month   day hour    minute  second  free_slots
-f.write(time.strftime("%Y,%m,%d,%H,%M,%S,"))
+# year  month   day hour    minute  free_slots
+f.write(time.strftime("%Y,%m,%d,%H,%M,"))
 f.write(str(nbr))
 
 

@@ -1,7 +1,6 @@
 #python 3
 
 
-import time
 import ftplib
 
 
@@ -10,7 +9,6 @@ server         = ''
 username       = ''
 password       = ''
 input_name     = 'stats.csv'
-output_name    = time.strftime("%Y-%m-%d_%H-%M-%S")+".csv"
 
 #get ftp server login data
 with open('credential.txt') as f:
@@ -28,12 +26,13 @@ server,username,password = credentials[0]
 ftp_connection = ftplib.FTP(server, username, password)
 
 #navigate to folder
-remote_path = "parking/"
+remote_path = "parking/raw"
 ftp_connection.cwd(remote_path)
 
-#open file
-fh = open(input_name, 'rb')
 
-#save file on ftp and close file
-ftp_connection.storbinary('STOR '+output_name, fh)
+#open file and save to ftp (stats.csv)
+fh = open(input_name, 'rb')
+ftp_connection.storbinary('STOR '+input_name, fh)
+
+
 fh.close()

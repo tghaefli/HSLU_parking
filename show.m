@@ -5,14 +5,16 @@ clear; close; clc
 %------------------------------ Configuration ------------------------------
 MATLAB  = true;
 FILTER  = false;
-
+GET_NEW = true;
 
 %------------------------------ Download CSV ------------------------------
 % Download the csv-file from the httpurl and save it to the current
 % directory
-httpurl = 'http://hslu.xeg.ch/parking/raw/stats.csv';
-output  = 'stats.csv';
-urlwrite(httpurl,output,'Timeout',8);
+if GET_NEW
+    httpurl = 'http://hslu.xeg.ch/parking/raw/stats.csv';
+    output  = 'stats.csv';
+    urlwrite(httpurl,output,'Timeout',8);
+end
 
 
 %-------------------------------- Read CSV --------------------------------
@@ -28,9 +30,9 @@ A=A(~any(isnan(A),2),:);            %remove row that contans a nan
 free = A(:,6);
 
 if MATLAB
-    [row, ~] = size(A);            % get number of rows
+    [row, ~] = size(A);             % get number of rows
     A = [A(:,1:5) zeros(row,1) A];  % add colom for "seconds"
-    t = datetime(A(:,1:6));         % calcualte the date
+    t = datetime(A(:,1:6),'Format','eeee, dd-MMM-y HH:mm:ss');         % calcualte the date
 end
 
 clear A T row;  
@@ -38,12 +40,18 @@ clear A T row;
 
 %--------------------------------- FILTER ---------------------------------
 if FILTER
-    disp('Data is FILTERered!')
-    window_size = 300;
+    disp('Data is filtered!')
+    window_size = 50;
     F = ones(window_size,1)/window_size;
     %F=1                            % No FILTERer
     %F = fir1(100,1);               % 100th order FIR (finite)
-    free = FILTERer(F,1,free);
+    free = filter(F,1,free);
+        
+    free = free(window_size:end);
+    if MATLAB
+        t = t(window_size:end);
+    end
+
     
     clear F window_size;
 end
