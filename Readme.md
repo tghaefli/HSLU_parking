@@ -1,4 +1,4 @@
-#Readme of HSLU_parking
+# Readme of HSLU_parking
 
 
 
@@ -27,12 +27,12 @@ ftp-server:user:password
 
 
 
-Add a crontab job: 
-~ crontab -e 
-add the follwoing line at the bottom of the file: 
-* * * * * python /home/pi/collect.py 
-* * * * * python /home/pi/push_minute.py 
-1 0 * * * python /home/pi/push_daily.py 
+Add a crontab job:  
+~ crontab -e  
+add the follwoing line at the bottom of the file:  
+    * * * * * python /home/pi/collect.py 
+    * * * * * python /home/pi/push_minute.py 
+    1 0 * * * python /home/pi/push_daily.py 
 
 
 
