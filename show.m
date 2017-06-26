@@ -20,7 +20,7 @@ end
 %-------------------------------- Read CSV --------------------------------
 T = readtable('stats.csv');         % read csv as table
 A = table2array(T);                 % convert to matrix for cell function
-%A = csvread('stats.csv');          % very slow
+%A = csvread('stats.csv');          % very slow, only handels numbers
 
 
 A=A(~any(isnan(A),2),:);            %remove row that contans a nan
@@ -33,9 +33,12 @@ if MATLAB
     [row, ~] = size(A);             % get number of rows
     A = [A(:,1:5) zeros(row,1) A];  % add colom for "seconds"
     t = datetime(A(:,1:6),'Format','eeee, dd-MMM-y HH:mm:ss');         % calcualte the date
+    %t = datetime(A(:,1:6),'Format','eeee, MMMM d, y');         % calcualte the date
+    %t = datetime(A(:,1:6));         % calcualte the date
+    
 end
 
-clear A T row;  
+clear A T row;
 
 
 %--------------------------------- FILTER ---------------------------------
@@ -46,12 +49,12 @@ if FILTER
     %F=1                            % No FILTERer
     %F = fir1(100,1);               % 100th order FIR (finite)
     free = filter(F,1,free);
-        
+    
     free = free(window_size:end);
     if MATLAB
         t = t(window_size:end);
     end
-
+    
     
     clear F window_size;
 end
@@ -89,5 +92,27 @@ title('Frei Parkplätze an der HSLU Horw')
 xlabel('Zeit')
 ylabel('Freie Parkplätze')
 ylim([0 max(free)])
+
+
+
+
+used = (ones(numel(free),1)*max(free))-free;
+hfig=figure(2);
+set(hfig,'Units', 'Normalized', 'OuterPosition', [0 0 1 1]);        % bottom left  ; width, height
+if MATLAB
+    plot(t, used);
+else
+    plot(used);
+end
+
+%datetick('x','dddd','keepticks')
+title('Besetzte Parkplätze an der HSLU Horw')
+xlabel('Zeit')
+ylabel('Besetzte Parkplätze')
+ylim([0 max(used)])
+
+
+
+
 
 clear
