@@ -3,21 +3,29 @@
 
 import time
 import ftplib
+import configparser
+
 
 
 #ftp details
+CONFIG_FILE    = 'config.ini'
 server         = ''
 username       = ''
 password       = ''
 input_name     = 'stats.csv'
 output_name    = time.strftime("%Y-%m-%d_%H-%M")+".csv"
 
-#get ftp server login data
-with open('credential.txt') as f:
-  credentials = [x.strip().split(':') for x in f.readlines()]
+##get ftp server login data
+config = configparser.ConfigParser()
+config.read(CONFIG_FILE)
 
-#extract username and password
-server,username,password = credentials[0]
+try:
+	credentials = config['ftp.xeg.ch']			# IMPORTANT, definition
+	server = credentials.get('server')
+	username = credentials.get('user')
+	password = credentials.get('password')
+except:
+	print("EXCEPTION!!!")
 
 #print "server:    " + server 
 #print "user:      " + username

@@ -2,26 +2,33 @@
 
 
 import ftplib
+import configparser
 
 
 #ftp details
+CONFIG_FILE    = 'config.ini'
 server         = ''
 username       = ''
 password       = ''
 input_name     = 'stats.csv'
 
 #get ftp server login data
-with open('credential.txt') as f:
-  credentials = [x.strip().split(':') for x in f.readlines()]
+config = configparser.ConfigParser()
+config.read(CONFIG_FILE)
 
-#extract username and password
-server,username,password = credentials[0]
+try:
+	credentials = config['ftp.xeg.ch']			# IMPORTANT, definition
+	server = credentials.get('server')
+	username = credentials.get('user')
+	password = credentials.get('password')
+except:
+	print("EXCEPTION!!!")
 
 #print "server:    " + server 
 #print "user:      " + username
 #print "password:  " + password
 
-
+#
 #Connect to ftp server and login
 ftp_connection = ftplib.FTP(server, username, password)
 
@@ -35,4 +42,4 @@ fh = open(input_name, 'rb')
 ftp_connection.storbinary('STOR '+input_name, fh)
 
 
-fh.close()
+#fh.close()
